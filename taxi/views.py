@@ -1,12 +1,17 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
-from django.contrib.auth.mixins import LoginRequiredMixin
 
+from .forms import (
+    DriverCreationForm,
+    DriverLicenseUpdateForm,
+    CarForm,
+    SearchForm
+)
 from .models import Driver, Car, Manufacturer
-from .forms import DriverCreationForm, DriverLicenseUpdateForm, CarForm, SearchForm
 
 
 @login_required
@@ -48,7 +53,9 @@ class SearchableListView(generic.ListView):
         if form.is_valid():
             search_text = form.cleaned_data.get("text")
             if search_text:
-                filter_kwargs = {f"{self.search_field}__icontains": search_text}
+                filter_kwargs = {
+                    f"{self.search_field}__icontains": search_text
+                }
                 return queryset.filter(**filter_kwargs)
         return queryset
 
