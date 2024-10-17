@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 
-from .forms import (
+from taxi.forms import (
     DriverCreationForm,
     DriverLicenseUpdateForm,
     CarForm,
@@ -42,6 +42,7 @@ class SearchableListView(generic.ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         search_text = self.request.GET.get("text", "")
+        context["search_field"] = self.search_field
         context["search_form"] = self.search_form_class(
             initial={"text": search_text}
         )
@@ -113,10 +114,7 @@ class CarDeleteView(LoginRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy("taxi:car-list")
 
 
-class DriverListView(
-    LoginRequiredMixin,
-    SearchableListView
-):
+class DriverListView(LoginRequiredMixin, SearchableListView):
     model = Driver
     paginate_by = 5
     search_field = "username"

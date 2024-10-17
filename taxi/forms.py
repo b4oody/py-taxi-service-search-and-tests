@@ -55,4 +55,5 @@ def validate_license_number(
 class SearchForm(forms.Form):
     text = forms.CharField(
         max_length=255,
-        required=False,)
+        required=False,
+    )
